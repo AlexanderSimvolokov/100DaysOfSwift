@@ -31,20 +31,26 @@ struct ContentView: View {
                 VStack(spacing: 15) {
                     VStack {
                         Text("Tap the flag of")
-                            .foregroundStyle(.white)
                             .font(.subheadline.weight(.heavy))
+                            .largeDarkBlueTitle()
                         Text(countries[correctAnswer])
                             .foregroundStyle(.secondary)
                             .font(.largeTitle.weight(.semibold))
                     }
                     
                     ForEach(0..<3) { number in
-                        Button {
-                            flagTapped(number)
-                        } label: {
-                            Image(countries[number])
-                                .clipShape(.capsule)
-                                .shadow(radius: 5)
+                        if number < 2 {
+                            Button {
+                                flagTapped(number)
+                            } label: {
+                                Image(countries[number])
+                                    .clipShape(.capsule)
+                                    .shadow(radius: 5)
+                            }
+                        } else {
+                            FlagImage(country: countries[number]) {
+                                flagTapped(number)
+                            }
                         }
                     }
                 }
@@ -105,6 +111,38 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+    }
+}
+
+struct FlagImage: View {
+    let country: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button {
+            action()
+        } label: {
+            Image(country)
+                .clipShape(.capsule)
+                .shadow(radius: 5)
+        }
+    }
+}
+
+struct LargeDarkBlueTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .foregroundStyle(.blue)
+            .padding(.vertical, 8)
+            .multilineTextAlignment(.center)
+    }
+}
+
+extension View {
+    func largeDarkBlueTitle() -> some View {
+        modifier(LargeDarkBlueTitle())
     }
 }
 
