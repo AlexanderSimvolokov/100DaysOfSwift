@@ -31,8 +31,8 @@ struct ContentView: View {
                 VStack(spacing: 15) {
                     VStack {
                         Text("Tap the flag of")
-                            .foregroundStyle(.white)
                             .font(.subheadline.weight(.heavy))
+                            .largeDarkBlueTitle()
                         Text(countries[correctAnswer])
                             .foregroundStyle(.secondary)
                             .font(.largeTitle.weight(.semibold))
@@ -126,6 +126,23 @@ struct FlagImage: View {
                 .clipShape(.capsule)
                 .shadow(radius: 5)
         }
+    }
+}
+
+struct LargeDarkBlueTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .foregroundStyle(.blue)
+            .padding(.vertical, 8)
+            .multilineTextAlignment(.center)
+    }
+}
+
+extension View {
+    func largeDarkBlueTitle() -> some View {
+        modifier(LargeDarkBlueTitle())
     }
 }
 
