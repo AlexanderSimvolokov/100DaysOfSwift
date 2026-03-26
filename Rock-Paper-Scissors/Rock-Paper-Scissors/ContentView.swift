@@ -13,6 +13,8 @@ struct ContentView: View {
     @State var opponentChose = "?"
     @State var youMadeaChoise = false
     @State var opponentMadeaChoise = false
+    @State var youCountWin = 0
+    @State var opponentCountWin = 0
     
     var body: some View {
         ZStack {
@@ -43,12 +45,31 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: 50)
             .background(Color.yellow.opacity(0.4))
             
-            VStack {
-                Text(isTop ? "Противник выбрал" : "Вы выбрали")
-                    .font(.title2)
+            ZStack {
+                HStack(spacing: 0) {
+                    VStack {
+                        Text("Ты")
+                            .border(Color.black, width: 1)
+                        Text(isTop ? "\(opponentCountWin)" :"\(youCountWin)")
+                        
+                    }
+                    .border(Color.black, width: 1)
+                    VStack {
+                        Text("Этот")
+                            .border(Color.black, width: 1)
+                        Text(isTop ? "\(youCountWin)" : "\(opponentCountWin)")
+                    }
+                    .border(Color.black, width: 1)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 
-                Text(isTop ? opponentMadeaChoise ? "..." : opponentChose : youMadeaChoise ? "..." :youChose)
-                    .font(.largeTitle)
+                VStack {
+                    Text(isTop ? "Противник выбрал" : "Вы выбрали")
+                        .font(.title2)
+                    
+                    Text(isTop ? opponentMadeaChoise ? "Выбор сделан" : opponentChose : youMadeaChoise ? "Выбор сделан" :youChose)
+                        .font(.largeTitle)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(isTop ? Color.blue.opacity(0.2) : Color.green.opacity(0.2))
@@ -103,27 +124,39 @@ struct ContentView: View {
         if youChose == "Rock" && opponentChose == "Scissors" {
             youChose = "Вы выйграли!!!"
             opponentChose = "Вы проиграли((("
+            
+            youCountWin += 1
         } else if  youChose == "Rock" && opponentChose == "Paper" {
             youChose = "Вы проиграли((("
             opponentChose = "Вы выйграли!!!"
+            
+            opponentCountWin += 1
         } else if  youChose == "Rock" && opponentChose == "Rock" {
             youChose = "Ничья"
             opponentChose = "Ничья"
         } else if  youChose == "Paper" && opponentChose == "Rock" {
             youChose = "Вы выйграли!!!"
             opponentChose = "Вы проиграли((("
+            
+            youCountWin += 1
         } else if  youChose == "Paper" && opponentChose == "Scissors" {
             youChose = "Вы проиграли((("
             opponentChose = "Вы выйграли!!!"
+            
+            opponentCountWin += 1
         } else if  youChose == "Paper" && opponentChose == "Paper" {
             youChose = "Ничья"
             opponentChose = "Ничья"
         } else if  youChose == "Scissors" && opponentChose == "Paper" {
             youChose = "Вы выйграли!!!"
             opponentChose = "Вы проиграли((("
+            
+            youCountWin += 1
         } else if  youChose == "Scissors" && opponentChose == "Rock" {
             youChose = "Вы проиграли((("
             opponentChose = "Вы выйграли!!!"
+            
+            opponentCountWin += 1
         } else if  youChose == "Scissors" && opponentChose == "Scissors" {
             youChose = "Ничья"
             opponentChose = "Ничья"
