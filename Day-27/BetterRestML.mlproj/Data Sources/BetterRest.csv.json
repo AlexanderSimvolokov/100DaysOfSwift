@@ -1,0 +1,22 @@
+{
+  "activityEntities" : [
+
+  ],
+  "createdDate" : "2026-04-01T08:33:14Z",
+  "dataPathRelativeToProjectURL" : "../BetterRest.csv/",
+  "dataResult" : {
+    "createdDate" : "2026-04-01T08:33:14Z",
+    "dataSourceID" : "144B7088-0A16-4612-B78A-D97E5C227689",
+    "dataURL" : "file:///Users/alexandersimvolokov/Development/Git/My/100DaysOfSwift/Day-26/BetterRest.csv"
+  },
+  "dataURL" : "file:///Users/alexandersimvolokov/Development/Git/My/100DaysOfSwift/Day-26/BetterRest.csv",
+  "experimentIDs" : [
+    "2DF95BFE-7427-4A1C-8CE0-EF8651977E19"
+  ],
+  "id" : "144B7088-0A16-4612-B78A-D97E5C227689",
+  "modifiedDate" : "2026-04-01T08:33:14Z",
+  "pathType" : 0,
+  "preferredFilename" : "BetterRest.csv",
+  "title" : "BetterRest.csv",
+  "version" : "1.0"
+}
