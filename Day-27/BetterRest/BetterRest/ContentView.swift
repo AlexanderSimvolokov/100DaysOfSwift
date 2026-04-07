@@ -17,7 +17,6 @@ struct ContentView: View {
     @State private var alertMessage = ""
     @State private var showingAlert = false
     
-    
     static var defaultWakeTime: Date {
         var components = DateComponents()
         components.hour = 7
@@ -28,12 +27,14 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             Form {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("When do you want to wake up?")
-                        .font(.headline)
-                    
-                    DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
-                        .labelsHidden()
+                Section (header: Text("When will we wake up?")) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("When do you want to wake up?")
+                            .font(.headline)
+                        
+                        DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
+                            .labelsHidden()
+                    }
                 }
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Desired amount of sleep")
@@ -43,12 +44,22 @@ struct ContentView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Daily coffee intake")
-                        .font(.headline)
-                    
-                    Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
+                    HStack {
+                        Text("Daily coffee intake")
+                            .font(.headline)
+                        
+                        //                    Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
+                        Spacer()
+                        Picker("Число от 1 до 20", selection: $coffeeAmount) {
+                            ForEach(1...20, id: \.self) { number in
+                                Text("\(number)")
+                                    .tag(number)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                    }
                 }
-                // more to come
             }
             .navigationTitle("BetterRest")
             .toolbar {
