@@ -37,24 +37,36 @@ struct ContentView: View {
             .navigationTitle(rootWord)
             .onSubmit(addNewWord)
             .onAppear(perform: startGame)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("New Game", action: startGame)
+                }
+            }
         }
         .alert(errorTitle, isPresented: $showingError) {
             Button("OK") { }
         } message: {
             Text(errorMessage)
         }
+        
        
     }
     func addNewWord() {
         // lowercase and trim the word, to make sure we don't add duplicate words with case differences
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
-        withAnimation {
-            usedWords.insert(answer, at: 0)
-        }
-        
         // exit if the remaining string is empty
         guard answer.count > 0 else { return }
+        
+        guard answer.count > 3 else {
+            wordError(title: "Word too short", message: "Words need to be longer than 3 letters.")
+            return
+        }
+        
+        guard answer == rootWord else {
+            wordError(title: "Word not in the root word", message: "Words need to be in the root word")
+            return
+        }
         
         guard isOriginal(word: answer) else {
             wordError(title: "Word used already", message: "Be more original")
@@ -69,6 +81,10 @@ struct ContentView: View {
         guard isReal(word: answer) else {
             wordError(title: "Word not recognized", message: "You can't just make them up, you know!")
             return
+        }
+        
+        withAnimation {
+            usedWords.insert(answer, at: 0)
         }
         
         // extra validation to come
