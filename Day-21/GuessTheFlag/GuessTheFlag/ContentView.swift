@@ -17,6 +17,11 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var score: Int = 0
     
+    @State private var tappedFlag = -1
+    @State private var rotation = 0.0
+    @State private var wrongOpacity = 1.0
+    @State private var wrongScale = 1.0
+    
     var body: some View {
         ZStack {
             RadialGradient(stops: [
@@ -46,11 +51,19 @@ struct ContentView: View {
                                 Image(countries[number])
                                     .clipShape(.capsule)
                                     .shadow(radius: 5)
+                                    .rotation3DEffect(.degrees(number == tappedFlag ? rotation : 0),
+                                                      axis: (x: 0, y: 1, z: 0))
+                                    .opacity(number == tappedFlag ? 1.0 : wrongOpacity)
+                                    .scaleEffect(number == tappedFlag ? 1.0 : wrongScale)
                             }
                         } else {
                             FlagImage(country: countries[number]) {
                                 flagTapped(number)
                             }
+                            .rotation3DEffect(.degrees(number == tappedFlag ? rotation : 0),
+                                              axis: (x: 0, y: 1, z: 0))
+                            .opacity(number == tappedFlag ? 1.0 : wrongOpacity)
+                            .scaleEffect(number == tappedFlag ? 1.0 : wrongScale)
                         }
                     }
                 }
@@ -102,15 +115,31 @@ struct ContentView: View {
         }
 
         showingScore = true
+        
+        withAnimation(.easeInOut(duration: 0.8)) {
+                    rotation = 360
+                    wrongOpacity = 0.25
+                    wrongScale = 0.7   // третий эффект — уменьшение
+                }
     }
     
     func restartGame() {
         score = 0
+        resetAnimation()
+        askQuestion()
     }
     
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        resetAnimation()
+    }
+    
+    func resetAnimation() {
+        tappedFlag = -1
+        rotation = 0
+        wrongOpacity = 1.0
+        wrongScale = 1.0
     }
 }
 
