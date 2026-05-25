@@ -14,23 +14,71 @@ struct ContentView: View {
     
     @State private var showingSheet = false
     
+    @State private var numbers = [Int]()
+    @State private var currentNumber = 1
+    
+//    @State private var tapCount = UserDefaults.standard.integer(forKey: "Tap")
+    @AppStorage("tapCount") private var tapCount = 0
+    
+    @State private var user1 = User1(firstName: "Taylor", lastName: "Swift")
+    
     var body: some View {
-        VStack {
-            Text("Your name is \(user.firstName) \(user.lastName).")
-            
-            TextField("First name", text: $user.firstName)
-            TextField("Last name", text: $user.lastName)
-            
-            Button("Show Sheet") {
-                // show the sheet
-                showingSheet.toggle()
+        NavigationStack {
+            VStack {
+                Text("Your name is \(user.firstName) \(user.lastName).")
+                
+                TextField("First name", text: $user.firstName)
+                TextField("Last name", text: $user.lastName)
+                
+                Button("Show Sheet") {
+                    // show the sheet
+                    showingSheet.toggle()
+                }
+                .sheet(isPresented: $showingSheet) {
+                    // contents of the sheet
+                    SecondView(name: "@ASimvolokov")
+                }
+                
+                List {
+                    ForEach(numbers, id: \.self) {
+                        Text("Row \($0)")
+                    }
+                    .onDelete(perform: removeRows)
+                }
+                
+                Button("Add Number") {
+                    numbers.append(currentNumber)
+                    currentNumber += 1
+                }
+                
+                Button("Tap count: \(tapCount)") {
+                    tapCount += 1
+//                    UserDefaults.standard.set(tapCount, forKey: "Tap")
+                }
+                
+                Button("Save User") {
+                    let encoder = JSONEncoder()
+
+                    if let data = try? encoder.encode(user1) {
+                        UserDefaults.standard.set(data, forKey: "UserData")
+                    }
+                }
             }
-            .sheet(isPresented: $showingSheet) {
-                // contents of the sheet
-                SecondView(name: "@ASimvolokov")
+            .toolbar {
+                EditButton()
             }
         }
     }
+    
+    func removeRows(at offsets: IndexSet) {
+        numbers.remove(atOffsets: offsets)
+    }
+    
+}
+
+struct User1: Codable {
+    let firstName: String
+    let lastName: String
 }
 
 struct SecondView: View {
