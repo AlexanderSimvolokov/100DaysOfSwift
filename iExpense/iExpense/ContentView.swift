@@ -10,97 +10,66 @@ import Observation
 
 struct ContentView: View {
     
-    @State private var user = User()
+    @State private var expenses = Expenses()
     
-    @State private var showingSheet = false
-    
-    @State private var numbers = [Int]()
-    @State private var currentNumber = 1
-    
-//    @State private var tapCount = UserDefaults.standard.integer(forKey: "Tap")
-    @AppStorage("tapCount") private var tapCount = 0
-    
-    @State private var user1 = User1(firstName: "Taylor", lastName: "Swift")
+    @State private var showingAddExpense = false
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("Your name is \(user.firstName) \(user.lastName).")
-                
-                TextField("First name", text: $user.firstName)
-                TextField("Last name", text: $user.lastName)
-                
-                Button("Show Sheet") {
-                    // show the sheet
-                    showingSheet.toggle()
-                }
-                .sheet(isPresented: $showingSheet) {
-                    // contents of the sheet
-                    SecondView(name: "@ASimvolokov")
-                }
-                
-                List {
-                    ForEach(numbers, id: \.self) {
-                        Text("Row \($0)")
-                    }
-                    .onDelete(perform: removeRows)
-                }
-                
-                Button("Add Number") {
-                    numbers.append(currentNumber)
-                    currentNumber += 1
-                }
-                
-                Button("Tap count: \(tapCount)") {
-                    tapCount += 1
-//                    UserDefaults.standard.set(tapCount, forKey: "Tap")
-                }
-                
-                Button("Save User") {
-                    let encoder = JSONEncoder()
+            List {
+                ForEach(expenses.items) { item in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(item.name)
+                                .font(.headline)
+                            Text(item.type)
+                        }
 
-                    if let data = try? encoder.encode(user1) {
-                        UserDefaults.standard.set(data, forKey: "UserData")
+                        Spacer()
+                        Text(item.amount, format: .currency(code: "USD"))
                     }
                 }
+                .onDelete(perform: removeItems)
             }
             .toolbar {
-                EditButton()
+                Button("Add Expense", systemImage: "plus") {
+                    let expense = ExpenseItem(name: "Test", type: "Personal", amount: 5)
+                    expenses.items.append(expense)
+                }
+            }
+            .navigationTitle("iExpense")
+            .sheet(isPresented: $showingAddExpense) {
+                AddView(expenses: expenses)
+            }
+            Button("Add Expense", systemImage: "plus") {
+                showingAddExpense = true
             }
         }
     }
-    
-    func removeRows(at offsets: IndexSet) {
-        numbers.remove(atOffsets: offsets)
+    func removeItems(at offsets: IndexSet) {
+        expenses.items.remove(atOffsets: offsets)
     }
-    
 }
 
-struct User1: Codable {
-    let firstName: String
-    let lastName: String
-}
 
-struct SecondView: View {
-    
+
+struct ExpenseItem: Identifiable, Codable {
+    let id = UUID()
     let name: String
-    
-    @Environment(\.dismiss) var dismiss
-    
-    var body: some View {
-        Text("Second View")
-        Text("Hello, \(name)!")
-        
-        Button("Dismiss") {
-            dismiss()
-        }
-    }
+    let type: String
+    let amount: Double
 }
 
 @Observable
-class User {
-    var firstName = "Bilbo"
-    var lastName = "Baggins"
+class Expenses {
+    var items = [ExpenseItem]() {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(items) {
+                UserDefaults.standard.set(encoded, forKey: "Items")
+            }
+        }
+        
+    }
 }
 
 #Preview {
