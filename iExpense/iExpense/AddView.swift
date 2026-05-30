@@ -19,6 +19,16 @@ struct AddView: View {
     
     var expenses: Expenses
     
+    var amountFont: Font {
+        if amount <= 10 {
+            return .title
+        } else if amount < 40 {
+            return .title2          // или .title3 — чуть больше .title
+        } else {
+            return .largeTitle
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -30,8 +40,9 @@ struct AddView: View {
                     }
                 }
                 
-                TextField("Amount", value: $amount, format: .currency(code: "USD"))
+                TextField("Amount", value: $amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                     .keyboardType(.decimalPad)
+                    .font(amountFont)
             }
             .navigationTitle("Add new expense")
             .toolbar {
