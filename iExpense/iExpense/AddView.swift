@@ -1,10 +1,3 @@
-//
-//  AddView.swift
-//  iExpense
-//
-//  Created by Alexander Simvolokov on 29.05.2026.
-//
-
 import SwiftUI
 
 struct AddView: View {
@@ -17,45 +10,55 @@ struct AddView: View {
     
     let types = ["Business", "Personal"]
     
-    var expenses: Expenses
+    var expenses: Expenses   // лучше сделать let, если не меняешь
     
     var amountFont: Font {
         if amount <= 10 {
             return .title
         } else if amount < 40 {
-            return .title2          // или .title3 — чуть больше .title
+            return .title2
         } else {
             return .largeTitle
         }
     }
     
     var body: some View {
-        NavigationStack {
-            Form {
-                TextField("Name", text: $name)
-                
-                Picker("Type", selection: $type) {
-                    ForEach(types, id: \.self) {
-                        Text($0)
-                    }
+        Form {
+            TextField("Name", text: $name)
+            
+            Picker("Type", selection: $type) {
+                ForEach(types, id: \.self) {
+                    Text($0)
                 }
-                
-                TextField("Amount", value: $amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                    .keyboardType(.decimalPad)
-                    .font(amountFont)
             }
-            .navigationTitle("Add new expense")
-            .toolbar {
+            
+            TextField("Amount", value: $amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                .keyboardType(.decimalPad)
+                .font(amountFont)
+        }
+        .navigationTitle("Add new expense")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Cancel") {
+                    dismiss()
+                }
+            }
+            
+            ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") {
                     let item = ExpenseItem(name: name, type: type, amount: amount)
                     expenses.items.append(item)
                     dismiss()
                 }
+                .disabled(name.isEmpty)
             }
         }
     }
 }
 
 #Preview {
-    AddView(expenses: Expenses())
+    NavigationStack {
+        AddView(expenses: Expenses())
+    }
 }
