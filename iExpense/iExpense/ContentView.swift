@@ -32,10 +32,15 @@ struct ContentView: View {
                 .onDelete(perform: removeItems)
             }
             .toolbar {
-                Button("Add Expense", systemImage: "plus") {
-                    let expense = ExpenseItem(name: "Test", type: "Personal", amount: 5)
-                    expenses.items.append(expense)
+                NavigationLink {
+                    AddView(expenses: expenses)
+                } label: {
+                    Label("Add Expenses", systemImage: "plus")
                 }
+//                Button("Add Expense", systemImage: "plus") {
+//                    let expense = ExpenseItem(name: "Test", type: "Personal", amount: 5)
+//                    expenses.items.append(expense)
+//                }
             }
             .navigationTitle("iExpense")
             .sheet(isPresented: $showingAddExpense) {
