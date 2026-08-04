@@ -21,8 +21,19 @@ class Order {
             }
         }
     }
-    
-    
+        
     var extraFrosting = false
     var addSprinkles = false
+    
+    var name = ""
+    var streetAddrass = ""
+    var city = ""
+    var zip = ""
+    
+    var hasValidAddress: Bool {
+        if name.isEmpty || streetAddrass.isEmpty || city.isEmpty || zip.isEmpty {
+            return false
+        }
+        return true
+    }
 }
