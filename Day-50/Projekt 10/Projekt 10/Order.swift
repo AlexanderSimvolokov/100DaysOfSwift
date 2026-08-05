@@ -22,8 +22,7 @@ class Order: Codable {
             }
         }
     }
-    
-    
+        
     var extraFrosting = false
     var addSprinkles = false
     var name = ""

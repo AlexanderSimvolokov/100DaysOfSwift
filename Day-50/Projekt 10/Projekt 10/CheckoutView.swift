@@ -2,7 +2,7 @@
 //  CheckoutView.swift
 //  Projekt 10
 //
-//  Created by Alexander Simvolokov on 04.08.2026.
+//  Created by Alexander Simvolokov on 22.07.2026.
 //
 
 import SwiftUI
